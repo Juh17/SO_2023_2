@@ -1,14 +1,14 @@
 import time
 
 tarefas = [
-    {"ingresso": 4, "duracao": 40, "prioridade": 4},
-    {"ingresso": 1, "duracao": 20, "prioridade": 2},
-    {"ingresso": 3, "duracao": 50, "prioridade": 1},
-    {"ingresso": 0, "duracao": 30, "prioridade": 3}
+    {"ingresso": 5, "duracao": 10, "prioridade": 4},
+    {"ingresso": 15, "duracao": 30, "prioridade": 2},
+    {"ingresso": 10, "duracao": 20, "prioridade": 1},
+    {"ingresso": 0, "duracao": 40, "prioridade": 3}
 ]
 
-quantum = 20
-troca_contexto = 5
+quantum = 15
+troca_contexto = 4
 
 tempo_atual = 0
 tempos_espera = []
