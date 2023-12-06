@@ -1,5 +1,5 @@
 def main():
-    vetor_recursos_existentes = [5,4,3,2]
+    vetor_recursos_existentes = [5,4,2,1]
     vetor_recursos_disponiveis = [2,1,0,0]
 
     matriz_alocacao_corrente = [
