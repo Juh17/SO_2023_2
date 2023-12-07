@@ -1,69 +1,66 @@
-def main():
-    vetor_recursos_existentes = [4,3,2,1]
-    vetor_recursos_disponiveis = [2,1,0,0]
+def pode_executar(disponiveis, alocados, requisicoes, processo):
+    for i in range(4):
+        if requisicoes[processo][i] > disponiveis[i]:
+            return False
+    return True
 
-    matriz_alocacao_corrente = [
-        [0,0,1,0],
-        [2,0,0,1],
-        [0,1,2,0]
+def executar(disponiveis, alocados, requisicoes, processo):
+    for i in range(4):
+        disponiveis[i] += alocados[processo][i]
+        alocados[processo][i] = 0
+
+def main():
+    recursos_existentes = [4, 2, 3, 1]
+    recursos_disponiveis = [2, 1, 0, 0]
+
+    matriz_alocacao_concorrente = [
+        [0, 0, 1, 0],
+        [2, 0, 0, 1],
+        [0, 1, 2, 0]
     ]
 
     matriz_requisicoes = [
-        [2,0,0,1],
-        [1,0,1,0],
-        [2,1,0,0]
+        [2, 0, 0, 1],
+        [1, 0, 1, 0],
+        [2, 1, 0, 0]
     ]
 
-    recursos_p1 = matriz_alocacao_corrente[0]
-    recursos_p2 = matriz_alocacao_corrente[1]
-    recursos_p3 = matriz_alocacao_corrente[2]
+    foi_executado = [False] * 3
 
-    recursos_necessarios_p1 = matriz_requisicoes[0]
-    recursos_necessarios_p2 = matriz_requisicoes[1]
-    recursos_necessarios_p3 = matriz_requisicoes[2]
-    recursos = usar_e_liberar(vetor_recursos_disponiveis, recursos_necessarios_p1, recursos_necessarios_p2, recursos_necessarios_p3)
-    verificar_impasse = igualdade_recursos(vetor_recursos_disponiveis, vetor_recursos_existentes)
+    print("Recursos existentes:", recursos_existentes)
+    print("Recursos disponíveis:", recursos_disponiveis)
 
+    print("Matriz de alocação concorrente:")
+    nomes_processos = ["p1", "p2", "p3"]
+    for i in range(3):
+        print(nomes_processos[i], matriz_alocacao_concorrente[i])
 
-    print(f'Recursos existentes: {vetor_recursos_existentes}')
-    print(f'Recursos disponíveis: {vetor_recursos_disponiveis}')
-    print(f'\nMatriz de alocação corrente: {matriz_alocacao_corrente}')
-    print(f'\nMatriz de requisições: {matriz_requisicoes}')
+    print("Matriz de requisições:")
+    for i in range(3):
+        print(nomes_processos[i], matriz_requisicoes[i])
 
-    
-    print(verificar_impasse)
+    while True:
+        executou = False
 
+        for i in range(3):
+            if not foi_executado[i] and pode_executar(recursos_disponiveis, matriz_alocacao_concorrente, matriz_requisicoes, i):
+                executar(recursos_disponiveis, matriz_alocacao_concorrente, matriz_requisicoes, i)
+                print(f"Processo {nomes_processos[i]} executado.")
+                print("Recursos disponíveis:", recursos_disponiveis)
+                foi_executado[i] = True
+                executou = True
 
-def usar_e_liberar(disponiveis, p1, p2, p3):
-    deadlock = True  
-    alocou_recursos = False  
+        if not executou:
+            break
 
-    for i in range(len(disponiveis)):
-       
-        if all(p1) <= disponiveis[i]:
-            disponiveis[i] += p1[i]
-            alocou_recursos = True  
-            deadlock = False 
-        if all(p2) <= disponiveis[i]:
-            disponiveis[i] += p2[i]
-            alocou_recursos = True 
-            deadlock = False 
-        if all(p3) <= disponiveis[i]:
-            disponiveis[i] += p3[i]
-            alocou_recursos = True  
-            deadlock = False  
+        todos_executados = all(foi_executado)
+        if todos_executados:
+            break
 
-    # Verifica se nenhum processo alocou recursos
-    if not alocou_recursos:
-        print('Todos os processos estão em deadlock/impasse')
-
-    return disponiveis
-
-def igualdade_recursos(disponiveis, existentes):
-    for recurso in range(len(disponiveis)):
-        if disponiveis[recurso] != existentes[recurso]:
-            return 'Pode haver impasse/deadlock'
-    return 'Todos os processos rodaram'
-
+    nao_executado = any(not e for e in foi_executado)
+    if nao_executado:
+        print("Há deadlock.")
+    else:
+        print("Não há deadlock.")
 
 main()
